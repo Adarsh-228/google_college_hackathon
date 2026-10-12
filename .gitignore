@@ -48,3 +48,4 @@ Thumbs.db
 # Hackathon Agent Workspaces & Env
 workspaces/
 .env
+*.zip
