@@ -44,3 +44,7 @@ yarn-error.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# Hackathon Agent Workspaces & Env
+workspaces/
+.env
