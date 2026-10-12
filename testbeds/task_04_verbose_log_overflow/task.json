@@ -1,0 +1,9 @@
+{
+  "id": "task_04_verbose_log_overflow",
+  "title": "Task 4: Verbose Log Parsing & Context Overflow",
+  "category": "Context Management & Compaction",
+  "description": "Running tests prints thousands of log lines that will overflow unmanaged 32k context windows (T0). Under ContextT4, staged elision (M1) compacts the log, allowing the agent to successfully fix the parser.",
+  "prompt": "Fix the regex in parser.py to extract IPv4 addresses correctly and ensure test_parser.py passes.",
+  "expected_behavior": "Extract valid IPv4 without trailing punctuation.",
+  "eval_command": "pytest test_parser.py"
+}

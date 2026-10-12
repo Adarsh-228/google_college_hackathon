@@ -1,0 +1,7 @@
+--- a/client.py
++++ b/client.py
+@@ -14,2 +14,4 @@
+             if code == 200:
+                 return "SUCCESS"
++            if attempts >= self.max_retries:
++                raise MaxRetriesExceeded(f"Failed after {attempts} attempts")

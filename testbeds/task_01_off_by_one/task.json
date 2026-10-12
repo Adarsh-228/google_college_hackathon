@@ -1,0 +1,9 @@
+{
+  "id": "task_01_off_by_one",
+  "title": "Task 1: Pagination Off-By-One Slice",
+  "category": "SWE-Bench Style",
+  "description": "The paginate function in app.py returns 9 items instead of 10 due to an incorrect slice upper bound.",
+  "prompt": "Fix the off-by-one pagination bug in app.py so that test_app.py passes with pytest.",
+  "expected_behavior": "Return exactly 'size' items for full pages.",
+  "eval_command": "pytest test_app.py"
+}

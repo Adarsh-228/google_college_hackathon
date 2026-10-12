@@ -1,0 +1,6 @@
+--- a/app.py
++++ b/app.py
+@@ -8,3 +8,3 @@
+     start = (page - 1) * size
+-    return items[start : start + size - 1]
++    return items[start : start + size]

@@ -1,0 +1,9 @@
+{
+  "id": "task_03_stuck_loop_api",
+  "title": "Task 3: Unbounded Flaky Retry Loop",
+  "category": "Reliability & Circuit Breaking",
+  "description": "client.py retries HTTP 429 rate limit responses forever in an unbounded while loop with 0 backoff. Triggers AgentGuard 5-streak warning and 8-streak termination if unhandled.",
+  "prompt": "Fix client.py by adding a max_retries limit (default 3) and exponential backoff to prevent infinite retry loops.",
+  "expected_behavior": "Raise MaxRetriesExceeded after 3 attempts.",
+  "eval_command": "pytest test_client.py"
+}

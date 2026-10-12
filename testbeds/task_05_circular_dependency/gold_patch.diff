@@ -1,0 +1,12 @@
+--- a/service.py
++++ b/service.py
+@@ -1,2 +1,5 @@
++def calculate_discount(price: float) -> float:
++    return price * 0.10
++
+ def get_checkout_price(price: float, is_vip: bool) -> float:
+     if not is_vip:
+         return price
+-    discount = calculate_discount_v2(price)
++    discount = calculate_discount(price)
+     return price - discount

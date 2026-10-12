@@ -1,0 +1,9 @@
+{
+  "id": "task_05_circular_dependency",
+  "title": "Task 5: Broken Import & Undefined Name",
+  "category": "Diagnostics & Linting",
+  "description": "service.py references an undefined identifier calculate_discount_v2 that causes NameError. AgentGuard's zero-turn linter alerts the agent immediately upon file save.",
+  "prompt": "Fix service.py by importing or defining calculate_discount and fixing test_service.py.",
+  "expected_behavior": "Return 10% discount without NameError.",
+  "eval_command": "pytest test_service.py"
+}

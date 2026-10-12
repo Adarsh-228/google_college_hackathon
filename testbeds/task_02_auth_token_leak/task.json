@@ -1,0 +1,9 @@
+{
+  "id": "task_02_auth_token_leak",
+  "title": "Task 2: Credential Masking in Logs",
+  "category": "Security & Sanitization",
+  "description": "auth.py emits raw Authorization Bearer tokens in stdout logs instead of masking all but the first 4 characters.",
+  "prompt": "Mask Bearer authentication tokens in auth.py so that sensitive secrets are not logged in plain text and test_auth.py passes.",
+  "expected_behavior": "Log 'Bearer abcd***' instead of 'Bearer abcd1234efgh5678'.",
+  "eval_command": "pytest test_auth.py"
+}

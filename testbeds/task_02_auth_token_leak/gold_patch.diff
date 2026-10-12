@@ -1,0 +1,7 @@
+--- a/auth.py
++++ b/auth.py
+@@ -10,2 +10,3 @@
+     raw_token = header_value.split("Bearer ", 1)[1]
+-    return f"Auth: Bearer {raw_token}"
++    masked = raw_token[:4] + "***" if len(raw_token) > 4 else "***"
++    return f"Auth: Bearer {masked}"
