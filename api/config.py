@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     firestore_collection: str = "runs"
 
     # API
-    api_port: int = 8080
+    api_port: int = 8000
     cors_origins: str = "*"
 
     # Engine mode: "mock" uses mock_runner, "live" calls harness_core

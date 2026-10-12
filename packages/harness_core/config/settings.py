@@ -47,7 +47,7 @@ class EngineConfig(BaseModel):
         """Load configuration from environment variables."""
         try:
             from dotenv import load_dotenv
-            load_dotenv(override=True)
+            load_dotenv(override=False)
         except ImportError:
             pass
 

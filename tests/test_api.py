@@ -218,10 +218,14 @@ def test_sandbox_mock_execution():
     testbed_root = os.path.join(os.path.dirname(__file__), "..", "testbeds")
     sb = WorkspaceSandbox(testbed_root=testbed_root, firestore=fs, bq_logger=bq)
 
+    from packages.harness_core.providers import MockLLMClient
+    mock_client = MockLLMClient(scenario="task_01_off_by_one")
+
     result = sb.execute_run(
         task_id="task_01_off_by_one",
         task_prompt="Fix the off-by-one bug",
         model_id="gemini-2.5-flash",
+        client=mock_client,
     )
 
     assert result["run_id"].startswith("run_")

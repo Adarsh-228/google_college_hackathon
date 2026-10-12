@@ -186,6 +186,10 @@ class BigQueryLogger:
 
     def _init_bigquery(self):
         """Initializes BigQuery client and ensures dataset + tables exist."""
+        # Only initialize remote BigQuery for production database, skip for test db paths
+        if self.db_path != settings.sqlite_db_path:
+            return
+
         try:
             cred_path = settings.google_application_credentials
             if cred_path and os.path.exists(cred_path):
