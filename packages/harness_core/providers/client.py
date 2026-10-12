@@ -42,7 +42,10 @@ class VertexAIClient:
     def _init_client(self):
         try:
             from google import genai
-            if self.project_id:
+            use_vertex = os.getenv("USE_VERTEX", "false").lower() in ("true", "1", "yes")
+            if self.api_key and not use_vertex:
+                self._client = genai.Client(api_key=self.api_key)
+            elif self.project_id:
                 self._client = genai.Client(vertexai=True, project=self.project_id, location=self.location)
             elif self.api_key:
                 self._client = genai.Client(api_key=self.api_key)

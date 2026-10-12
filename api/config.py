@@ -3,8 +3,12 @@ Centralized configuration for the Harness Kit API.
 Loads from environment variables / .env file.
 """
 import os
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 from typing import Optional
+
+# Ensure .env overrides any stale system variables
+load_dotenv(override=True)
 
 
 class Settings(BaseSettings):
@@ -14,6 +18,7 @@ class Settings(BaseSettings):
     google_cloud_project: str = "harness-kit-33919"
     google_cloud_region: str = "us-central1"
     google_application_credentials: Optional[str] = "gcp-key.json"
+    gemini_api_key: Optional[str] = None
 
     # BigQuery
     bq_dataset: str = "harness_analytics"
@@ -45,3 +50,6 @@ class Settings(BaseSettings):
 
 # Singleton
 settings = Settings()
+
+if settings.google_application_credentials and os.path.exists(settings.google_application_credentials):
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.abspath(settings.google_application_credentials)

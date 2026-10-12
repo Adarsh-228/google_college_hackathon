@@ -45,6 +45,12 @@ class EngineConfig(BaseModel):
     @classmethod
     def from_env(cls) -> "EngineConfig":
         """Load configuration from environment variables."""
+        try:
+            from dotenv import load_dotenv
+            load_dotenv(override=True)
+        except ImportError:
+            pass
+
         def _get_bool(key: str, default: bool) -> bool:
             val = os.getenv(key)
             if val is None:
