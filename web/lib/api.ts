@@ -69,18 +69,18 @@ export async function startCompare(
   }
 }
 
-export async function fetchComparisonMetrics(
-  harnessRunId: string,
-  baselineRunId: string
-) {
+export async function createCustomTask(taskData: any) {
   try {
-    const res = await fetch(
-      `${API_BASE}/api/metrics/compare/${harnessRunId}/${baselineRunId}`
-    );
+    const res = await fetch(`${API_BASE}/api/tasks`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(taskData),
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return await res.json();
   } catch (err) {
-    console.warn("Failed to fetch comparison metrics:", err);
+    console.warn("Failed to create custom task via API:", err);
     return null;
   }
 }
+

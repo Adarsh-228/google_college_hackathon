@@ -74,6 +74,21 @@ class RunRequest(BaseModel):
     model_id: str = "gemini-2.5-flash"
     harness_config: Optional[Dict[str, Any]] = None
 
+class CreateTaskRequest(BaseModel):
+    id: str
+    title: str
+    category: str = "Custom Evaluation"
+    description: str = ""
+    prompt: str
+    eval_command: str = "pytest"
+    expected_behavior: str = ""
+    source_filename: str = "app.py"
+    source_code: str
+    fixed_code: Optional[str] = None
+    test_filename: str = "test_app.py"
+    test_code: str
+    diff: Optional[str] = None
+
 class CompareRequest(BaseModel):
     task_id: str
     model_id: str = "gemini-2.5-flash"
@@ -106,16 +121,78 @@ def list_tasks():
             task_path = os.path.join(TESTBEDS_DIR, task_name)
             meta_path = os.path.join(task_path, "task.json")
             if os.path.isdir(task_path):
+                meta = {"id": task_name, "title": task_name, "description": "", "category": "Benchmark"}
                 if os.path.exists(meta_path):
                     try:
                         with open(meta_path, "r", encoding="utf-8") as f:
                             meta = json.load(f)
-                        tasks.append(meta)
                     except Exception:
-                        tasks.append({"id": task_name, "title": task_name, "description": ""})
-                else:
-                    tasks.append({"id": task_name, "title": task_name, "description": ""})
+                        pass
+                
+                # Auto-read python files in testbed
+                files = []
+                for fname in sorted(os.listdir(task_path)):
+                    if fname.endswith(".py"):
+                        fpath = os.path.join(task_path, fname)
+                        try:
+                            with open(fpath, "r", encoding="utf-8") as f:
+                                files.append({"name": fname, "language": "python", "content": f.read()})
+                        except Exception:
+                            pass
+                diff_path = os.path.join(task_path, "gold_patch.diff")
+                diff_content = ""
+                if os.path.exists(diff_path):
+                    try:
+                        with open(diff_path, "r", encoding="utf-8") as f:
+                            diff_content = f.read()
+                    except Exception:
+                        pass
+                if files:
+                    meta["files"] = files
+                if diff_content:
+                    meta["diff"] = diff_content
+                tasks.append(meta)
     return {"tasks": tasks, "count": len(tasks)}
+
+
+@app.post("/api/tasks")
+def create_task(req: CreateTaskRequest):
+    """Creates a new evaluation testbed directory in testbeds/."""
+    import re
+    safe_id = re.sub(r"[^a-zA-Z0-9_\-]", "_", req.id.strip().lower())
+    if not safe_id:
+        safe_id = f"custom_task_{uuid.uuid4().hex[:6]}"
+    task_dir = os.path.join(TESTBEDS_DIR, safe_id)
+    os.makedirs(task_dir, exist_ok=True)
+
+    meta = {
+        "id": safe_id,
+        "title": req.title or safe_id,
+        "category": req.category,
+        "description": req.description,
+        "prompt": req.prompt,
+        "expected_behavior": req.expected_behavior,
+        "eval_command": req.eval_command,
+    }
+    with open(os.path.join(task_dir, "task.json"), "w", encoding="utf-8") as f:
+        json.dump(meta, f, indent=2)
+
+    with open(os.path.join(task_dir, req.source_filename), "w", encoding="utf-8") as f:
+        f.write(req.source_code)
+
+    with open(os.path.join(task_dir, req.test_filename), "w", encoding="utf-8") as f:
+        f.write(req.test_code)
+
+    diff_text = req.diff or f"--- a/{req.source_filename}\n+++ b/{req.source_filename}\n@@ -1 +1 @@\n# Reference fix patch"
+    with open(os.path.join(task_dir, "gold_patch.diff"), "w", encoding="utf-8") as f:
+        f.write(diff_text)
+
+    meta["files"] = [
+        {"name": req.source_filename, "language": "python", "content": req.source_code, "fixedContent": req.fixed_code or req.source_code},
+        {"name": req.test_filename, "language": "python", "content": req.test_code},
+    ]
+    meta["diff"] = diff_text
+    return {"status": "created", "task": meta, "task_id": safe_id}
 
 
 # ── Run Endpoints ─────────────────────────────────────────────────────
