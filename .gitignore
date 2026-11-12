@@ -51,3 +51,8 @@ gcp-key.json
 Thumbs.db
 .vscode/
 .idea/
+
+# Hackathon Agent Workspaces & Env
+workspaces/
+.env
+*.zip
