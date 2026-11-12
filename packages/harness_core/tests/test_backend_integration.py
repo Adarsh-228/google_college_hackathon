@@ -14,12 +14,16 @@ from packages.harness_core.examples.backend_integration_example import (
     cancel_agent_session,
     get_session_metrics,
     run_agent_task,
+    engine,
 )
 
 
 @pytest.mark.asyncio
 async def test_backend_route_run_and_serialization(tmp_path):
     """Verify that backend route returns valid serializable response using public contracts."""
+    # Ensure offline deterministic test provider
+    engine.provider = MockLLMProvider()
+
     # Create request
     ws_dir = str(tmp_path / "backend_ws")
     request = AgentExecutionRequest(

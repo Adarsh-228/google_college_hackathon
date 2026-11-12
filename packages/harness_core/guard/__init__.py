@@ -13,7 +13,8 @@ from packages.harness_core.guard.file_integrity import (
     FileStateValidator,
     ReadBeforeWriteValidator,
 )
-from packages.harness_core.guard.interceptor import AgentGuard
+from packages.harness_core.guard.substrate import AgentGuard
+from packages.harness_core.guard.interceptor import AgentGuard as InterceptorAgentGuard
 from packages.harness_core.guard.loop_detector import (
     LoopCheckResult,
     LoopDetector,
